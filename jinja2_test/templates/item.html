@@ -1,0 +1,48 @@
+<html>
+<head>
+    <title>租屋資訊</title>
+    <!--    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">-->
+</head>
+<body style="background-color:GhostWhite">
+<div>
+    <a href="/api/posts/template">回主頁</a>
+    <a href="{{to_page.last_page}}" class="page_updown">上一頁</a>
+    <a href="{{to_page.next_page}}" class="page_updown">下一頁</a>
+    <hr>
+</div>
+<div>
+    <form action="/api/posts/template">
+        發文者：<input type="text" name="find_poster" placeholder="尋找發文者"><br>
+        <input type="checkbox" name="find_area" value="台北市">台北市<input type="checkbox" name="find_area" value="新北市">新北市
+        <span>/</span>
+        <input type="radio" name="find_lease" value="1">可租賃<input type="radio" name="find_lease"
+                                                                     value="0">不可租賃<br>
+        更新日期：<input type="date" name="find_update">
+        <input type="submit" value="搜尋">
+        <hr>
+    </form>
+</div>
+<div>
+    <h3>{{to_page.message}}</h3>
+</div>
+<!--<div>{{posts_data}}</div>-->
+
+{% for data in posts_data %}
+<div>
+    <h2><a href="/api/posts/template/{{data.id}}">{{ data["title"] }}</a></h2>
+    <p>地址：{{ data["address"] }}</p>
+    <p>坪數：{{ data["size"] }}坪</p>
+    <p>樓層：{{ data["floor"] }}</p>
+    <p>聯絡人：{{ data["contact"] }} {{ data["poster"] }}</p>
+    <p style="color:Tomato">租金：{{ data["rent"] }}</p>
+    <hr>
+</div>
+{% endfor %}
+<br>
+<div>
+    <a href="/api/posts/template">回主頁</a>
+    <a href="{{to_page.last_page}}" class="page_updown">上一頁</a>
+    <a href="{{to_page.next_page}}" class="page_updown">下一頁</a>
+</div>
+</body>
+</html>
