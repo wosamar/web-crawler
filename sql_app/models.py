@@ -1,3 +1,4 @@
+from sqlalchemy.dialects.mysql import TEXT
 from .database import Base
 from sqlalchemy import Column, Integer, String, DATE, Boolean, Float, DATETIME
 
@@ -39,4 +40,4 @@ class LogData(Base):  # for crawler
     area = Column(String(5))
     page_num = Column(Integer)  # 第幾頁
     count = Column(Integer)  # 本頁爬到筆數
-    error_message = Column(String(200))  #失敗訊息
+    error_message = Column(TEXT)  #失敗訊息

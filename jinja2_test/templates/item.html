@@ -11,7 +11,7 @@
     <hr>
 </div>
 <div>
-    <form action="/api/posts/template">
+    <form action="{{ url_for('read_posts_page') }}">
         發文者：<input type="text" name="find_poster" placeholder="尋找發文者"><br>
         <input type="checkbox" name="find_area" value="台北市">台北市<input type="checkbox" name="find_area"
                                                                             value="新北市">新北市
@@ -23,11 +23,8 @@
         <hr>
     </form>
 </div>
-<div>
-    <h3>{{to_page.message}}</h3>
-</div>
-<!--<div>{{posts_data}}</div>-->
 
+{% if posts_data != []%}
 {% for data in posts_data %}
 <div>
     <h2><a href="{{ url_for('read_post_detail',post_id=data.id) }}">{{ data["title"] }}</a></h2>
@@ -39,6 +36,13 @@
     <hr>
 </div>
 {% endfor %}
+{% else %}
+<div>
+    <h3>沒有資料囉</h3>
+    <hr>
+</div>
+{% endif %}
+
 <br>
 <div>
     <a href="{{ url_for('read_posts_page') }}">回主頁</a>

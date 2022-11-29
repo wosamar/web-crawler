@@ -153,8 +153,6 @@ def get_lease_data_591(region: int, start_page: int = 0, end_page: int = None): 
             error_message = e.__str__()
 
         finally:
-            # if log_count < rows:  # 若尚未爬完則重新呼叫
-            #     get_lease_data_591(region=region, first_row=current_page*30, how_many_pages=0)  #從下一筆開始
             log_end = datetime.now()
             write_log(db=db,
                       log=schemas.WriteLogData(start_time=log_start, end_time=log_end, status=log_status, source=source,
@@ -287,6 +285,6 @@ def get_lease_data_housefun(region: int, first_row: int = 0, end_page: int = Non
 
 
 if __name__ == '__main__':
-    # get_lease_data_591(region=1, start_page=0, end_page=None)
-    get_lease_data_housefun(region=3, end_page=None)
+    get_lease_data_591(region=1, start_page=0, end_page=None)
+    # get_lease_data_housefun(region=3, end_page=None)
     check_leasable(db)

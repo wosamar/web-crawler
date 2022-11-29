@@ -5,9 +5,8 @@
     <title>{{ item_data["title"] }}</title>
 </head>
 <body>
-<div>
-    <h3>{{message}}</h3>
-</div>
+
+{% if item_data != None%}
 <div>
     <!--    <h2>{{item_data}}</h2>-->
     <h2>{{ item_data["title"] }}</h2>
@@ -16,19 +15,34 @@
     <p>樓層：{{ item_data["floor"] }}</p>
     <p>聯絡人：{{ item_data["contact"] }} {{ item_data["poster"] }}</p>
     <p style="color:Tomato">租金：{{ item_data["rent"] }}</p>
-    <p>更新時間：{{ item_data["update"] }}</p>
+    {% if item_data["leasable"] == 1%}
+    <p>租賃狀況：可租賃</p>
+    {% else %}
+    <p>租賃狀況：不可租賃</p>
+    {% endif %}
+    <p>更新時間：{{ item_data["post_update"] }}</p>
     <p>地區：{{item_data["area"]}}</p>
     <p>來源：{{item_data["source"]}}</p>
     <a href="{{item_data.url}}">{{ item_data["url"]}}</a>
     <hr>
 </div>
+{% else %}
 <div>
-    <button>修改資料</button>
-    <button>刪除資料</button>
-    <hr>
+    <h3>找不到此筆資料</h3>
+</div>
+{% endif %}
+<div>
+    <form action="{{ url_for('update_item',post_id=post_id) }}">
+        <input type="radio" name="post_leasable" value="1">可租賃<input type="radio" name="post_leasable"
+                                                                     value="0">不可租賃
+        <input type="submit" value="修改資料">
+        <!--    <button>修改資料</button>-->
+        <!--    <button>刪除資料</button>-->
+        <hr>
+    </form>
 </div>
 <div>
-    <a href="/api/posts/template">回主頁</a>
+    <a href="{{ url_for('read_posts_page') }}">回主頁</a>
 </div>
 </body>
 </html>

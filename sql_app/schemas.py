@@ -11,7 +11,7 @@ class ItemBase(BaseModel):  # 基本資料格式
     rent: int = None
     contact: str = None
     poster: str | None  = None
-    area: str = None
+    area: str | None = None
 
     @validator('title')
     def title_must_be_input(cls, v):
@@ -91,11 +91,11 @@ class Post(PostInfo):  # 系統控制的資料
         orm_mode = True
 
 
-class Count(ItemBase):  # 查詢統計資料
-    count: int = None
+# class Count(ItemBase):  # 查詢統計資料
+#     count: int = None
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True
 
 
 class LogData(BaseModel):
@@ -113,14 +113,10 @@ class WriteLogData(LogData):
     id: int = None
 
 
-class AreaName(str, Enum):  # API選擇地區
-    taipei = "台北市"
-    new_taipei = "新北市"
-
 
 class GetStatistics(BaseModel):
-    area: AreaName | None = None
-    lower_rent: int | None = 0
-    upper_rent: int | None = None
-    from_update: datetime | None = None
-    end_update: datetime | None = None
+    area: str | None
+    lower_rent: int | None
+    upper_rent: int | None
+    from_update: date | None
+    end_update: date | None
