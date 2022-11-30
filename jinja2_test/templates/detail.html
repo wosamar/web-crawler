@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant-TW">
 <head>
     <meta charset="UTF-8">
     <title>{{ item_data["title"] }}</title>
@@ -23,7 +23,9 @@
     <p>更新時間：{{ item_data["post_update"] }}</p>
     <p>地區：{{item_data["area"]}}</p>
     <p>來源：{{item_data["source"]}}</p>
+    {% if item_data["url"] != None%}
     <a href="{{item_data.url}}">{{ item_data["url"]}}</a>
+    {% endif %}
     <hr>
 </div>
 {% else %}
@@ -31,16 +33,30 @@
     <h3>找不到此筆資料</h3>
 </div>
 {% endif %}
+{% if item_data["source"] == "手動新增"%}
 <div>
-    <form action="{{ url_for('update_item',post_id=post_id) }}">
-        <input type="radio" name="post_leasable" value="1">可租賃<input type="radio" name="post_leasable"
-                                                                     value="0">不可租賃
+    <form action="{{ url_for('update_post_form')}}" method="POST">
+        <input type="hidden" name="post_id" value='{{ post_id }}'/>
+        <input type="hidden" name="title" value='{{ item_data["title"] }}'/>
+        <input type="hidden" name="area" value='{{ item_data["area"] }}'/>
+        <input type="hidden" name="address" value='{{ item_data["address"] }}'/>
+        <input type="hidden" name="rent" value='{{ item_data["rent"] }}'/>
+        <input type="hidden" name="size" value='{{ item_data["size"] }}'/>
+        <input type="hidden" name="floor" value='{{ item_data["floor"] }}'/>
+        <input type="hidden" name="contact" value='{{ item_data["contact"] }}'/>
+        <input type="hidden" name="poster" value='{{ item_data["poster"] }}'/>
         <input type="submit" value="修改資料">
-        <!--    <button>修改資料</button>-->
-        <!--    <button>刪除資料</button>-->
-        <hr>
     </form>
+    <hr>
 </div>
+<div>
+    <form action="{{ url_for('delete_post',post_id=post_id)}}" method="POST">
+        <input type="hidden" name="post_id" value='{{ post_id }}'/>
+        <input type="submit" value="刪除資料">
+    </form>
+    <hr>
+</div>
+{% endif %}
 <div>
     <a href="{{ url_for('read_posts_page') }}">回主頁</a>
 </div>

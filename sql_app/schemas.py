@@ -4,12 +4,12 @@ from enum import Enum
 
 
 class ItemBase(BaseModel):  # 基本資料格式
-    title: str = None
-    size: float = None
-    floor: str = None
-    address: str = None
-    rent: int = None
-    contact: str = None
+    title: str | None = None
+    size: float | None = None
+    floor: str | None = None
+    address: str | None = None
+    rent: int | None = None
+    contact: str | None = None
     poster: str | None  = None
     area: str | None = None
 
@@ -63,6 +63,11 @@ class PostInfo(ItemBase):
     source: str | None = None
     crawler_update: datetime | None = None
 
+class Post(PostInfo):  # 系統控制的資料
+    id: int = None
+
+    class Config:
+        orm_mode = True
 
 class PostCreateOrUpdate(PostInfo):
     pass
@@ -83,12 +88,11 @@ class SelectPosts(PostInfo):
 class APICreatePost(ItemBase):
     pass
 
+class APIUpdatePost(Post):
+    pass
 
-class Post(PostInfo):  # 系統控制的資料
-    id: int = None
 
-    class Config:
-        orm_mode = True
+
 
 
 # class Count(ItemBase):  # 查詢統計資料

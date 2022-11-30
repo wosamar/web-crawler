@@ -22,7 +22,9 @@ def get_db():
 
 # 取得主頁查詢貼文資料
 def select_posts(db: Session, offset: int, limit: int, condition: schemas.SelectPosts = None) -> List[dict]:
-    condition = condition.dict(exclude_none=True,exclude={'__all__':''})
+    condition = condition.dict(exclude_none=True)
+    condition = {k: v for k, v in condition.items() if v != ''}
+
     return db.query(models.LeaseData).order_by(models.LeaseData.post_update).filter_by(**condition).offset(
         offset).limit(limit).all()
 
@@ -64,7 +66,7 @@ def create_post(db: Session, item: schemas.PostCreate):
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
-    return db_item
+    return schemas.Post(**db_item.__dict__)
 
 
 # 更新(修改)資料
@@ -85,21 +87,18 @@ def check_leasable(db: Session):
     db.commit()
 
 
-# API更新租賃狀況
-def update_leasable(db: Session, post_id: int, post_leasable: bool):
-    db.execute(update(models.LeaseData).filter(models.LeaseData.id == post_id).values(
-        {models.LeaseData.leasable: post_leasable}))
+# API更新資料
+def api_update_data(db: Session, item: schemas.APIUpdatePost):
+    item = item.dict(exclude_none=True)
+    db.execute(update(models.LeaseData).filter(models.LeaseData.id == item['id']).values(**item))
     db.commit()
-    return get_post(db=db, post_id=post_id)
+    return get_post(db=db, post_id=item['id'])
 
 
-# 刪除特定條件資料(目前沒有使用)
-# def delete_data(db: Session, condition: schemas.SelectCondition):
-#     db.query(models.LeaseData).filter_by(**condition).delete()
-#     db.commit()
-#
-#     print(e.__class__.__name__)
-#     print(str(e))
+# 刪除資料
+def delete_data(db: Session, item_id: int):
+    db.query(models.LeaseData).filter(models.LeaseData.id == item_id).delete()
+    db.commit()
 
 # 寫log
 def write_log(db: Session, log: schemas.WriteLogData):
