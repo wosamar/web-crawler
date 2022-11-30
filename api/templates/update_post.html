@@ -2,11 +2,19 @@
 <html lang="zh-Hant-TW">
 <head>
     <meta charset="UTF-8">
+    {% if item_data == None%}
+    <title>新增租屋資訊</title>
+    {% else %}
     <title>更新租屋資訊</title>
+    {% endif %}
 </head>
 <body>
 <div>
+    {% if item_data == None %}
+    <h2>新增租屋資訊</h2>
+    {% else %}
     <h2>更新租屋資訊</h2>
+    {% endif %}
 </div>
 <div>
     <form action="/posts/{{ post_id }}" method="POST">
@@ -14,7 +22,7 @@
         地區：　　<select name="area" size="1">
         <option value="台北市">台北市</option>
         <option value="新北市">新北市</option>
-        </select><br>
+    </select><br>
         詳細地址：<input type="text" name="address" placeholder="請輸入地址" value='{{ item_data["address"] }}'><br>
         出租金額：<input type="number" name="rent" placeholder="請輸入金額" step="1" min=0
                         value='{{ item_data["rent"] }}'><br>
@@ -25,7 +33,8 @@
             發文者：　<input type="text" name="poster" placeholder="如：黃小姐" value='{{ item_data["poster"] }}'><br></p>
 
         租賃狀況：<input type="radio" name="leasable" value="1" checked>可租賃<input type="radio" name="leasable"
-                                                                     value="0">不可租賃<br>
+                                                                                    value="0">不可租賃<br>
+        <input type="hidden" name="source" value={{source}}>
         <p><input type="submit" value="送出"></p>
     </form>
 </div>

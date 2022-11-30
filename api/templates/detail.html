@@ -37,6 +37,7 @@
 <div>
     <form action="{{ url_for('update_post_form')}}" method="POST">
         <input type="hidden" name="post_id" value='{{ post_id }}'/>
+        <input type="hidden" name="source" value='{{ item_data["source"] }}'/>
         <input type="hidden" name="title" value='{{ item_data["title"] }}'/>
         <input type="hidden" name="area" value='{{ item_data["area"] }}'/>
         <input type="hidden" name="address" value='{{ item_data["address"] }}'/>
@@ -52,6 +53,7 @@
 <div>
     <form action="{{ url_for('delete_post',post_id=post_id)}}" method="POST">
         <input type="hidden" name="post_id" value='{{ post_id }}'/>
+        <input type="hidden" name="source" value='{{ item_data["source"] }}'/>
         <input type="submit" value="刪除資料">
     </form>
     <hr>

@@ -1,6 +1,5 @@
 from pydantic import BaseModel, validator
 from datetime import date, datetime
-from enum import Enum
 
 
 class ItemBase(BaseModel):  # 基本資料格式
