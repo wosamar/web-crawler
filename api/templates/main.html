@@ -6,8 +6,14 @@
 <body style="background-color:GhostWhite">
 <div>
     <a href="{{ url_for('read_posts_page') }}">回主頁</a>
-    <a href="{{to_page.last_page}}" class="page_updown">上一頁</a>
-    <a href="{{to_page.next_page}}" class="page_updown">下一頁</a>
+    {% if offset >= limit%}
+    <a href="{{links.last_page}}" class="page_updown">上一頁</a>
+    {% endif %}
+
+    {% if posts_data != []%}
+    <a href="{{links.next_page}}" class="page_updown">下一頁</a>
+    {% endif %}
+    <a href="{{ url_for('add_post_form') }}">新增貼文</a>
     <hr>
 </div>
 <div>
@@ -33,6 +39,7 @@
     <p>樓層：{{ data["floor"] }}</p>
     <p>聯絡人：{{ data["contact"] }} {{ data["poster"] }}</p>
     <p style="color:Tomato">租金：{{ data["rent"] }}</p>
+<!--    <p>租賃：{{ data["is_leasable"] }}</p>-->
     <hr>
 </div>
 {% endfor %}
@@ -46,8 +53,13 @@
 <br>
 <div>
     <a href="{{ url_for('read_posts_page') }}">回主頁</a>
-    <a href="{{to_page.last_page}}" class="page_updown">上一頁</a>
-    <a href="{{to_page.next_page}}" class="page_updown">下一頁</a>
+    {% if offset >= limit%}
+    <a href="{{links.last_page}}" class="page_updown">上一頁</a>
+    {% endif %}
+
+    {% if posts_data != []%}
+    <a href="{{links.next_page}}" class="page_updown">下一頁</a>
+    {% endif %}
     <a href="{{ url_for('add_post_form') }}">新增貼文</a>
 </div>
 </body>

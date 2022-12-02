@@ -1,5 +1,6 @@
-from database import engine
+
 from sql_app import models
+from sql_app.database import engine
 
 
 def create_table():

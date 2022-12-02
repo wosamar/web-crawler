@@ -1,29 +1,13 @@
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from sql_app.database import *
-from sqlalchemy import update, and_
+from sqlalchemy import update
 from typing import List
-from . import models, schemas
-
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# 取得主頁貼文資料
-# def get_posts(db: Session, offset: int, limit: int) -> List[dict]:
-#     return db.query(models.LeaseData).order_by(models.LeaseData.post_update).offset(offset).limit(limit).all()
-
+from sql_app import models, schemas
 
 # 取得主頁查詢貼文資料
 def select_posts(db: Session, offset: int, limit: int, condition: schemas.SelectPosts = None) -> List[dict]:
     condition = condition.dict(exclude_none=True)
-    condition = {k: v for k, v in condition.items() if v != ''}
+    condition = {k: v for k, v in condition.items() if v}
 
     return db.query(models.LeaseData).order_by(models.LeaseData.post_update).filter_by(**condition).offset(
         offset).limit(limit).all()
@@ -37,6 +21,7 @@ def get_post(db: Session, post_id: int):
 # 回傳指定條件下的統計資訊(資料筆數)
 def count_posts(db: Session, condition: schemas.GetStatistics) -> int:
     condition = condition.dict(exclude_none=True)  # 排除為None的項目
+    condition = {k: v for k, v in condition.items() if v != ''}
     query = db.query(models.LeaseData)
     if "area" in condition:
         query = query.filter(models.LeaseData.area == condition["area"])
@@ -55,13 +40,13 @@ def count_posts(db: Session, condition: schemas.GetStatistics) -> int:
 def create_or_update(db: Session, item: schemas.PostCreateOrUpdate):
     result = db.query(models.LeaseData).filter(models.LeaseData.url == item.url).first()
     if result:
-        update_data(db=db, item=schemas.PostUpdate(**item.dict()))
+        update_data_by_url(db=db, item=schemas.PostUpdate(**item.dict()))
     else:
         create_post(db=db, item=schemas.PostCreate(**item.dict()))
 
 
 # 新增資料
-def create_post(db: Session, item: schemas.PostCreate):
+def create_post(db: Session, item: schemas.PostCreate|schemas.PostCreateFromAPI):
     db_item = models.LeaseData(**item.dict())
     db.add(db_item)
     db.commit()
@@ -69,17 +54,14 @@ def create_post(db: Session, item: schemas.PostCreate):
     return schemas.Post(**db_item.__dict__)
 
 
-# 更新(修改)資料
-def update_data(db: Session, item: schemas.PostUpdate):
-    try:
-        db.execute(update(models.LeaseData).filter(models.LeaseData.url == item.url).values(**item.dict()))
-        db.commit()
-    except Exception as e:
-        print(e.__class__.__name__)
-        print(str(e))
+# 更新(修改)資料 by url
+def update_data_by_url(db: Session, item: schemas.PostUpdate):
+    db.execute(update(models.LeaseData).filter(models.LeaseData.url == item.url).values(**item.dict()))
+    db.commit()
 
 
-# 爬蟲更新租賃狀況
+
+# 從爬蟲時間判斷租賃狀況
 def check_leasable(db: Session):
     time_now = datetime.now() - timedelta(hours=2)
     db.execute(update(models.LeaseData).filter(models.LeaseData.crawler_update <= time_now).values(
@@ -87,8 +69,7 @@ def check_leasable(db: Session):
     db.commit()
 
 
-# API更新資料
-def api_update_data(db: Session, item: schemas.APIUpdatePost):
+def update_data_by_id(db: Session, item: schemas.PostUpdateFromAPI):
     item = item.dict(exclude_none=True)
     db.execute(update(models.LeaseData).filter(models.LeaseData.id == item['id']).values(**item))
     db.commit()
@@ -100,12 +81,6 @@ def delete_data(db: Session, item_id: int):
     db.query(models.LeaseData).filter(models.LeaseData.id == item_id).delete()
     db.commit()
 
-# 寫log
-def write_log(db: Session, log: schemas.WriteLogData):
-    db_item = models.LogData(**log.dict())
-    db.add(db_item)
-    db.commit()
-    db.refresh(db_item)
 
 
 if __name__ == '__main__':

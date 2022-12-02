@@ -1,4 +1,8 @@
+from datetime import datetime, timedelta
+
 from sqlalchemy.dialects.mysql import TEXT
+from sqlalchemy.ext.hybrid import hybrid_property
+
 from .database import Base
 from sqlalchemy import Column, Integer, String, DATE, Boolean, Float, DATETIME
 
@@ -7,7 +11,7 @@ from sqlalchemy import Column, Integer, String, DATE, Boolean, Float, DATETIME
 class LeaseData(Base):
     __tablename__ = "lease_data"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(30))  # 標題名稱
+    title = Column(String(255))  # 標題名稱
     size = Column(Float)  # 坪數
     floor = Column(String(20))  # 樓層
     address = Column(String(55))  # 房屋地址
@@ -21,16 +25,15 @@ class LeaseData(Base):
     source = Column(String(5))  # 資料來源網站or手動新增
     crawler_update = Column(DATETIME)  # 最後一次爬到的時間
 
+# class DataCreat(LeaseData):
+#     pass
+#
+#
+# class DataUpdate(LeaseData):
+#     pass
 
-class DataCreat(LeaseData):
-    pass
 
-
-class DataUpdate(LeaseData):
-    pass
-
-
-class LogData(Base):  # for crawler
+class LogData(Base):
     __tablename__ = "log_data"
     id = Column(Integer, primary_key=True, autoincrement=True)
     start_time = Column(DATETIME)
