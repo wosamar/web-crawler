@@ -1,7 +1,7 @@
 <html lang="zh-Hant-TW">
 <head>
     <title>租屋資訊</title>
-    <!--    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">-->
+<!--        <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">-->
 </head>
 <body style="background-color:GhostWhite">
 <div>
@@ -37,9 +37,8 @@
     <p>地址：{{ data["address"] }}</p>
     <p>坪數：{{ data["size"] }}坪</p>
     <p>樓層：{{ data["floor"] }}</p>
-    <p>聯絡人：{{ data["contact"] }} {{ data["poster"] }}</p>
+    <p>聯絡人：{{ data["poster"] }}</p>
     <p style="color:Tomato">租金：{{ data["rent"] }}</p>
-<!--    <p>租賃：{{ data["is_leasable"] }}</p>-->
     <hr>
 </div>
 {% endfor %}

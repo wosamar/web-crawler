@@ -29,12 +29,11 @@
         坪數：　　<input type="number" name="size" placeholder="請輸入坪數" step="0.1" min=0
                       value='{{ item_data["size"] }}'><br>
         樓層：　　<input type="text" name="floor" placeholder="請輸入樓層/最高樓層" value='{{ item_data["floor"] }}'><br>
-        <p>聯絡人：　<input type="text" name="contact" placeholder="如：屋主、房仲" value='{{ item_data["contact"] }}'><br>
-            發文者：　<input type="text" name="poster" placeholder="如：黃小姐" value='{{ item_data["poster"] }}'><br></p>
+        <p>聯絡人類型：　<input type="text" name="contact" placeholder="如：屋主、房仲" value='{{ item_data["contact"] }}'><br>
+            聯絡人：　<input type="text" name="poster" placeholder="如：黃小姐" value='{{ item_data["poster"] }}'><br></p>
 
         租賃狀況：<input type="radio" name="leasable" value="1" checked>可租賃<input type="radio" name="leasable"
                                                                                     value="0">不可租賃<br>
-        <input type="hidden" name="source" value={{source}}>
         <p><input type="submit" value="送出"></p>
     </form>
 </div>

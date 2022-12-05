@@ -1,10 +1,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from dotenv import load_dotenv
+import os
+
+
 
 # 初始化
-# engine_url = "mysql+pymysql://root:eland1234@10.10.10.55:3306/crawler_database"
-engine_url = "mysql+pymysql://root:eland1234@10.10.10.55:3306/my_database"
+load_dotenv()
+engine_url = os.getenv('engine_url')
 
 engine = create_engine(
     engine_url, connect_args={}  # , echo=True

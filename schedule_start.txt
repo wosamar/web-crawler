@@ -1,1 +1,1 @@
-python .\cli.py run -s 00
+python .\cli.py run-sch -s 00

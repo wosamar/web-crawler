@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 from selenium.webdriver.common.by import By
-from bs4 import BeautifulSoup as BS
+from bs4 import BeautifulSoup
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 import re
-from crawler import set_driver as sd
+from crawler import driver_handler
 from sql_app.crud import posts as posts_crud, logs as logs_crud
 from sql_app import schemas as item_schemas
 
@@ -17,7 +17,7 @@ def button_click(driver):
 
 
 def parse_page(page_source):
-    soup = BS(page_source, 'html.parser')
+    soup = BeautifulSoup(page_source, 'html.parser')
     urls = soup.select('article[class="DataList both"]')
     for i in urls:
         # 取得文章網址和標題
@@ -45,11 +45,11 @@ def parse_page(page_source):
         else:
             post_update = (is_now - timedelta(days=update_time_num)).strftime("%Y-%m-%d")
 
-        yield item_schemas.PostCreateOrUpdate(title=title, size=size, floor=floor, address=address,
-                                              post_update=post_update, rent=rent, url=url,
-                                              contact=contact,
-                                              poster=poster, leasable=leasable,
-                                              crawler_update=is_now)
+        yield item_schemas.PostBase(title=title, size=size, floor=floor, address=address,
+                                    post_update=post_update, rent=rent, url=url,
+                                    contact=contact,
+                                    poster=poster, leasable=leasable,
+                                    crawler_update=is_now)
 
 
 # 爬好房網
@@ -68,12 +68,12 @@ def get_lease_data(region: int, end_page: int = None):
         return
     url_hf = "https://rent.housefun.com.tw/region/{}".format(reg_text)
 
-    driver = sd.set_driver(url=url_hf, source="housefun")
+    driver = driver_handler.set_driver(url=url_hf, source="housefun")
     WebDriverWait(driver, 10).until(
         expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "article.DataList"))
     )
     res = driver.page_source
-    soup = BS(res, 'html.parser')
+    soup = BeautifulSoup(res, 'html.parser')
     if end_page is None:
         total_pages: int = int(soup.select('#PageCount')[0].get_text().split("/")[1])
         print(f'共{total_pages}頁')  # 每頁為十筆
@@ -93,29 +93,15 @@ def get_lease_data(region: int, end_page: int = None):
             for item in items:
                 item.area = area
                 item.source = source
-                posts_crud.create_or_update(db=sd.db, item=item)  # 寫入資料庫
+                posts_crud.create_or_update(db=driver_handler.db, item=item)  # 寫入資料庫
                 item_count += 1
-
-
-        except AttributeError as e:
-            log_status = "AttributeError"
-            error_message = e.__str__()
-
-        except ValueError as e:
-            log_status = "ValueError"
-            error_message = e.__str__()
-
-        except RuntimeError as e:
-            log_status = "RuntimeError"
-            error_message = e.__str__()
-
         except Exception as e:
-            log_status = "ExceptionError"
+            log_status = e.__class__.__name__
             error_message = e.__str__()
 
         finally:
             log_end = datetime.now()
-            logs_crud.write_log(db=sd.db,
+            logs_crud.write_log(db=driver_handler.db,
                                 log=item_schemas.WriteLogData(start_time=log_start, end_time=log_end, status=log_status,
                                                               source=source,
                                                               area=area, page_num=page_num, error_message=error_message,
@@ -123,4 +109,4 @@ def get_lease_data(region: int, end_page: int = None):
 
 if __name__ == '__main__':
     get_lease_data(region=1, end_page=3)
-    posts_crud.check_leasable(sd.db)
+    posts_crud.check_leasable(driver_handler.db)

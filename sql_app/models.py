@@ -1,8 +1,4 @@
-from datetime import datetime, timedelta
-
 from sqlalchemy.dialects.mysql import TEXT
-from sqlalchemy.ext.hybrid import hybrid_property
-
 from .database import Base
 from sqlalchemy import Column, Integer, String, DATE, Boolean, Float, DATETIME
 
@@ -17,7 +13,7 @@ class LeaseData(Base):
     address = Column(String(55))  # 房屋地址
     post_update = Column(DATE)  # 更新時間
     rent = Column(Integer)  # 每月租金
-    url = Column(String(55))  # 文章連結
+    url = Column(String(255))  # 文章連結
     contact = Column(String(10))  # 聯絡人
     poster = Column(String(30))  # 發文者
     area = Column(String(5))  # 地區
@@ -25,12 +21,6 @@ class LeaseData(Base):
     source = Column(String(5))  # 資料來源網站or手動新增
     crawler_update = Column(DATETIME)  # 最後一次爬到的時間
 
-# class DataCreat(LeaseData):
-#     pass
-#
-#
-# class DataUpdate(LeaseData):
-#     pass
 
 
 class LogData(Base):

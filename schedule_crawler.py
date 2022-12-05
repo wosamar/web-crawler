@@ -23,4 +23,4 @@ def schedule_start(start_time):
 
 
 if __name__ == '__main__':
-    schedule_start(50)
+    schedule_start(00)

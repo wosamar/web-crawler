@@ -13,6 +13,12 @@ class PostBase(BaseModel):  # 基本資料格式
     poster: str | None = None
     area: str | None = None
 
+    post_update: date | None = None
+    url: str | None = None
+    leasable: bool | None = None
+    source: str | None = None
+    crawler_update: datetime | None = None
+
     @validator('title')
     def title_too_long(cls, v):
         if len(v) >= 255:
@@ -73,56 +79,43 @@ class PostInRequestBase(PostBase):
         return v
 
 
-class PostInfo(PostBase):
-    post_update: date | None = None
-    url: str | None = None
-    leasable: bool | None = None
-    source: str | None = None
-    crawler_update: datetime | None = None
-
-class PostInRequestInfo(PostInfo,PostInRequestBase):
-    pass
-
-
-class Post(PostInfo):  # 資料庫控制的資料
+class PostInDatabase(PostBase):
     id: int = None
 
     class Config:
         orm_mode = True
 
-class PostInRequest(Post,PostInRequestInfo):
-    pass
+
+class PostInRequest(PostInRequestBase):
+    id: int = None
+
+    class Config:
+        orm_mode = True
 
 
 class PostInResponse(PostInRequest):
     pass
 
 
-class PostCreateOrUpdate(PostInfo):
+class PostCreate(PostBase):
     pass
 
 
-class PostCreate(PostInfo):
+class PostUpdate(PostBase):
     pass
 
 
-class PostUpdate(PostInfo):
-    pass
-
-class PostCreateFromAPI(PostInRequestInfo):
+class PostCreateFromAPI(PostInRequestBase):
     pass
 
 
-class PostUpdateFromAPI(PostInRequestInfo):
-    pass
-
-
-class SelectPosts(PostInRequestInfo):
+class PostUpdateFromAPI(PostInRequest):
     pass
 
 
 class APICreatePost(PostInRequestBase):
     pass
+
 
 class LogData(BaseModel):
     start_time: datetime
@@ -134,13 +127,6 @@ class LogData(BaseModel):
     error_message: str = None
     count: int
 
+
 class WriteLogData(LogData):
     id: int = None
-
-
-class GetStatistics(BaseModel):
-    area: str | None
-    lower_rent: int | None
-    upper_rent: int | None
-    from_update: date | None
-    end_update: date | None
