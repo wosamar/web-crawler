@@ -52,7 +52,8 @@ def create_post(db: Session, item: schemas.PostCreate | schemas.PostCreateFromAP
 
 
 def update_data_by_url(db: Session, item: schemas.PostUpdate):
-    db.execute(update(models.LeaseData).filter(models.LeaseData.url == item.url).values(**item.dict()))
+    item = item.dict(exclude_none=True)
+    db.execute(update(models.LeaseData).filter(models.LeaseData.url == item["url"]).values(**item))
     db.commit()
 
 

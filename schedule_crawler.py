@@ -7,15 +7,12 @@ from sql_app.db_utils import get_db
 
 def schedule_start(start_time):
     db = next(get_db())
-    try:
-        schedule.every().hour.at(f":{start_time}").do(crawler_591.get_lease_data, region=1, start_page=0, end_page=None)
-        schedule.every().hour.at(f":{start_time}").do(crawler_591.get_lease_data, region=3, start_page=0, end_page=None)
+    schedule.every().hour.at(f":{start_time}").do(crawler_591.get_lease_data, region=1, start_page=0, end_page=None)
+    schedule.every().hour.at(f":{start_time}").do(crawler_591.get_lease_data, region=3, start_page=0, end_page=None)
 
-        schedule.every().hour.at(f":{start_time}").do(crawler_housefun.get_lease_data, region=1, end_page=None)
-        schedule.every().hour.at(f":{start_time}").do(crawler_housefun.get_lease_data, region=3, end_page=None)
-        check_leasable(db)
-    except Exception as e:
-        print(e.__str__())
+    schedule.every().hour.at(f":{start_time}").do(crawler_housefun.get_lease_data, region=1, end_page=None)
+    schedule.every().hour.at(f":{start_time}").do(crawler_housefun.get_lease_data, region=3, end_page=None)
+    check_leasable(db)
 
     while True:
         schedule.run_pending()

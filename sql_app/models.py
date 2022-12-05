@@ -14,8 +14,8 @@ class LeaseData(Base):
     post_update = Column(DATE)  # 更新時間
     rent = Column(Integer)  # 每月租金
     url = Column(String(255))  # 文章連結
-    contact = Column(String(10))  # 聯絡人
-    poster = Column(String(30))  # 發文者
+    contact = Column(String(10))  # 聯絡人類型
+    poster = Column(String(30))  # 聯絡人
     area = Column(String(5))  # 地區
     leasable = Column(Boolean)  # 是否可以被租賃
     source = Column(String(5))  # 資料來源網站or手動新增

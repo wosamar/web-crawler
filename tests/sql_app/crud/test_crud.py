@@ -11,16 +11,16 @@ def test_select_posts(db: Session, creat_data):
     condition.update(leasable=True, poster="user")
     result = posts_crud.select_posts(db=db, offset=offset, limit=limit, **condition)
 
-    for item in result:
-        print(item.__dict__)
-    assert result
+    item = result[0]
+    print(item.__dict__)
+    assert item.__dict__["title"] == creat_data.title
 
 
 def test_get_post(db: Session, creat_data):
     result = posts_crud.get_post(db=db, post_id=creat_data.id)
 
     print(result.__dict__)
-    assert result
+    assert result.title == creat_data.title
 
 
 def test_count_posts(db: Session, creat_data):
@@ -28,13 +28,13 @@ def test_count_posts(db: Session, creat_data):
     condition.update(area="台北市", upper_rent=5000, from_update="2022-11-01")
     result = posts_crud.count_posts(db=db, **condition)
 
-    print(result)
-    assert result
+    print(f"result:{result}")
+    assert result == 1
 
 
 def test_create_or_update(db: Session):
     # 新增資料
-    item = schemas.PostBase(title="標題名稱", size=5, floor=1 / 12, address="應為新增",
+    item = schemas.PostBase(title="標題名稱", size=5, floor="1 / 12", address="應為新增",
                             post_update="2022-11-28", rent=10000, url="https://pytest.com.tw/",
                             contact="聯絡人欄位", poster="user", leasable=True,
                             crawler_update="2023-12-30 10:10:00")
@@ -47,7 +47,7 @@ def test_create_or_update(db: Session):
     assert result.poster == item.poster
 
     # 修改資料
-    item = schemas.PostBase(title="new_標題名稱", size=5, floor=2 / 12, address="應為修改",
+    item = schemas.PostBase(title="new_標題名稱", size=5, floor="2 / 12", address="應為修改",
                             post_update="2022-11-28", rent=10000, url="https://pytest.com.tw/",
                             contact="聯絡人欄位", poster="user", leasable=True,
                             crawler_update="2023-12-30 10:10:00")
@@ -61,7 +61,7 @@ def test_create_or_update(db: Session):
 
 
 def test_create_post(db: Session):
-    item = schemas.PostCreate(title="測試用標題", size=3, floor=3 / 12, address="台北市大安區",
+    item = schemas.PostCreate(title="測試用標題", size=3, floor="3 / 12", address="台北市大安區",
                               post_update="2022-11-28", rent=10000, url="https://sql.com.tw/",
                               contact="聯絡人欄位", poster="user", leasable=True,
                               crawler_update="2023-12-30 10:10:00")
@@ -73,14 +73,15 @@ def test_create_post(db: Session):
 
 def test_update_data_by_url(db: Session, creat_data):
     item = schemas.PostUpdate(title="更新後標題", contact="更新後聯絡人", url="https://fixture.com.tw/")
-    result: schemas.PostInDatabase = posts_crud.update_data_by_url(db=db, item=item)
+    result = posts_crud.update_data_by_url(db=db, item=item)
+
     assert result is None
 
     result = db.query(models.LeaseData).filter(models.LeaseData.url == item.url).first()
     print(result.__dict__)
 
     assert result.title == item.title
-    assert result.poster == item.poster
+    assert result.poster == creat_data.poster
 
 
 def test_check_leasable(db: Session, creat_data):

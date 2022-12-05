@@ -7,7 +7,8 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36'}
 db = next(get_db())
 
-def set_driver(url:str,source:str):
+
+def set_driver(url: str, source: str):
     options = Options()
     options.add_argument('--headless')
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)

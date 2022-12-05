@@ -52,8 +52,7 @@ def parse_page(page_source):
         poster: str = item.select_one('div.item-msg').get_text().split("/")[0].strip().split(" ")[1]
         leasable: bool = True
 
-        # 取得坪數和樓層
-        item_style_text = i_kind.find_next()
+        item_style_text = i_kind.find_next()# 取得坪數和樓層
         if "坪" in item_style_text.get_text():
             size = float(item_style_text.get_text().split("坪")[0])
             floor = item_style_text.find_next().get_text()
@@ -82,7 +81,11 @@ def parse_page(page_source):
 def get_lease_data(region: int, start_page: int = 0, end_page: int = None):  # 地區1為台北，3為新北  # pages為要爬頁數，0為全部
     source: str = "591租屋"
     area_dict = {1: "台北市", 3: "新北市"}
-    area = area_dict[region]
+    if area_dict[region]:
+        area = area_dict[region]
+    else:
+        print('區域參數輸入錯誤')
+        return
     url_591 = "https://rent.591.com.tw/?region={}&firstRow={}".format(region, start_page * 30)
 
     driver = driver_handler.set_driver(url=url_591, source="591")
@@ -95,10 +98,10 @@ def get_lease_data(region: int, start_page: int = 0, end_page: int = None):  # �
     rows: int = int(soup.select('div.list-container-content > div > section.vue-list-rent-sort > div > div > span')[
                         0].get_text().replace(",", "")) - start_page * 30  # 取得總筆數 - 開始筆數
     if end_page is None:
-        total_pages = math.ceil(rows / 30)  # 除以每頁30筆，無條件進位
+        total_pages = math.ceil(rows / 30)
         print(f'共{rows}筆')
     else:
-        total_pages = end_page
+        total_pages = end_page - start_page
 
     for current_page in range(total_pages):
         log_start = datetime.now()  # 紀錄開始時間

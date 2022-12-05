@@ -26,7 +26,7 @@ def db() -> Session:
 
 @pytest.fixture(name="creat_data")
 def creat_data(db: Session):
-    item = PostCreate(title="首筆資料", size=1, floor=2 / 2, address="create by fixture", post_update="2022-11-28",
+    item = PostCreate(title="首筆資料", size=1, floor="2 / 2", address="create by fixture", post_update="2022-11-28",
                       rent=100, url="https://fixture.com.tw/", contact="聯絡人欄位", poster="user", leasable=True,
                       area="台北市", source="python", crawler_update="2022-11-30 10:10:00")
     return create_post(db=db, item=item)

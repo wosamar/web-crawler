@@ -56,17 +56,15 @@ def parse_page(page_source):
 def get_lease_data(region: int, end_page: int = None):
     source: str = "好房網"
 
-    # 判斷地區
-    if region == 1:  # 台北市
-        area = "台北市"
-        reg_text = "%E5%8F%B0%E5%8C%97%E5%B8%82"
-    elif region == 3:  # 新北市
-        area = "新北市"
-        reg_text = "%E6%96%B0%E5%8C%97%E5%B8%82"
+    area_dict = {1: "台北市", 3: "新北市"}
+    region_dict = {1: "%E5%8F%B0%E5%8C%97%E5%B8%82", 3: "%E6%96%B0%E5%8C%97%E5%B8%82"}
+    if area_dict[region]:
+        area = area_dict[region]
+        region = region_dict[region]
     else:
         print('區域參數輸入錯誤')
         return
-    url_hf = "https://rent.housefun.com.tw/region/{}".format(reg_text)
+    url_hf = "https://rent.housefun.com.tw/region/{}".format(region)
 
     driver = driver_handler.set_driver(url=url_hf, source="housefun")
     WebDriverWait(driver, 10).until(
@@ -76,11 +74,11 @@ def get_lease_data(region: int, end_page: int = None):
     soup = BeautifulSoup(res, 'html.parser')
     if end_page is None:
         total_pages: int = int(soup.select('#PageCount')[0].get_text().split("/")[1])
-        print(f'共{total_pages}頁')  # 每頁為十筆
+        print(f'共{total_pages}頁')
     else:
         total_pages = end_page
 
-    for current_page in range(total_pages):  # 放進pages
+    for current_page in range(total_pages):
         page_num = current_page + 1  # 紀錄頁數
         item_count = 0
         log_start = datetime.now()  # 紀錄開始時間
