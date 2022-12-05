@@ -5,7 +5,7 @@
 ![](image/LeaseData.jpg)
 ![](image/LogData.jpg)
 
-## 如何部屬及執行
+## 部屬及執行
 ### 初始化資料庫
 本專案資料庫使用MySQL。  
 - 在`sql_app`目錄下建立`.env`檔案，設定`engine_url = your_url`指定本機資料庫連線路徑。  
