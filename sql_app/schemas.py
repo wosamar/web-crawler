@@ -28,6 +28,25 @@ class PostBase(BaseModel):  # 基本資料格式
 
 
 class PostInRequestBase(PostBase):
+
+    class Config:
+        schema_extra = {
+            "example" : {
+                "title": "標題範例",
+                "size": 3,
+                "floor": "2/3",
+                "address": "106台北市大安區信義路四段",
+                "rent": 12000,
+                "contact": "屋主",
+                "poster": "賈小姐",
+                "area": "台北市",
+                "post_update": "2022-12-06",
+                "url":"https://testtest.com.tw/",
+                "leasable":True,
+                "source":"範例",
+                "crawler_update":"2022-12-06 00:00:00",
+            }
+        }
     @validator('title')
     def title_must_be_input(cls, v):
         if v == 'string':
@@ -76,6 +95,15 @@ class PostInRequestBase(PostBase):
         if len(v) > 10:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 detail="聯絡人最多可輸入10個字元")
+        return v
+
+    @validator('area')
+    def area_not_correct(cls, v):
+        if v == "台北市" or v == "新北市":
+            pass
+        else:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                detail="地區格式不正確")
         return v
 
 

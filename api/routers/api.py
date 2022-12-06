@@ -54,7 +54,7 @@ async def add_post_api(post: schemas.APICreatePost, db: Session = Depends(get_db
 
 # 修改資料
 @router.put("/posts/{post_id}", response_model=schemas.PostInDatabase)
-async def update_item_api(post_data: schemas.PostUpdate, post_id: int, db: Session = Depends(get_db)):
+async def update_item_api(post_data: schemas.PostInRequestBase, post_id: int, db: Session = Depends(get_db)):
     post = posts_crud.get_post(db=db, post_id=post_id)
     source = post.source
     if source == "手動新增":

@@ -55,7 +55,8 @@ async def read_posts_page(request: Request, offset: int = 0, limit: int = 50, fi
     if offset >= 0 and limit > 0:
         find_update = find_update if find_update else None
         condition = {}
-        condition.update(poster=find_poster, area=find_area, post_update=find_update, leasable=find_lease)
+        condition.update(poster=find_poster, area=find_area, from_update=find_update, end_update=find_update,
+                         leasable=find_lease)
         results = posts_crud.select_posts(db, offset=offset, limit=limit, **condition)
         results = [schemas.PostInResponse.from_orm(rs) for rs in results]
         links = page_up_down(offset=offset, limit=limit, find_poster=find_poster, find_area=find_area,

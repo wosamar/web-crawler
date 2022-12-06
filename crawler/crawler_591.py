@@ -88,7 +88,8 @@ def get_lease_data(region: int, start_page: int = 0, end_page: int = None):  # å
         return
     url_591 = "https://rent.591.com.tw/?region={}&firstRow={}".format(region, start_page * 30)
 
-    driver = driver_handler.set_driver(url=url_591, source="591")
+    driver = driver_handler.set_driver(url=url_591)
+    print("591 loading...")
     WebDriverWait(driver, 10).until(
         expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "section.vue-list-rent-item"))
     )

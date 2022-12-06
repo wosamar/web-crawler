@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{{ item_data["title"] }}</title>
 </head>
-<body>
+<body style="background-color:GhostWhite">
 
 <h2>{{request["detail"]}}</h2>
 
@@ -38,9 +38,6 @@
 {% if item_data["source"] == "手動新增"%}
 <div>
     <a href="{{ url_for('update_post_form',post_id=post_id) }}">修改資料</a>
-    <hr>
-</div>
-<div>
     <a href="{{ url_for('delete_post',post_id=post_id) }}">刪除資料</a>
     <hr>
 </div>

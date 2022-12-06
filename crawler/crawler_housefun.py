@@ -66,7 +66,8 @@ def get_lease_data(region: int, end_page: int = None):
         return
     url_hf = "https://rent.housefun.com.tw/region/{}".format(region)
 
-    driver = driver_handler.set_driver(url=url_hf, source="housefun")
+    driver = driver_handler.set_driver(url=url_hf)
+    print("housefun loading...")
     WebDriverWait(driver, 10).until(
         expected_conditions.presence_of_element_located((By.CSS_SELECTOR, "article.DataList"))
     )

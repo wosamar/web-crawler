@@ -5,11 +5,30 @@ from typing import List
 from sql_app import models, schemas
 
 
+def set_post_filters(query, area=None, lower_rent=None, upper_rent=None, from_update=None, end_update=None, poster=None,
+                     leasable=None, **kwargs):
+    if area:
+        query = query.filter(models.LeaseData.area == area)
+    if lower_rent:
+        query = query.filter(lower_rent <= models.LeaseData.rent)
+    if upper_rent:
+        query = query.filter(models.LeaseData.rent <= upper_rent)
+    if from_update:
+        query = query.filter(from_update <= models.LeaseData.post_update)
+    if end_update:
+        query = query.filter(models.LeaseData.post_update <= end_update)
+    if poster:
+        query = query.filter(models.LeaseData.poster == poster)
+    if leasable is not None:
+        query = query.filter(models.LeaseData.leasable == leasable)
+    return query
+
+
 # 取得主頁查詢貼文資料
 def select_posts(db: Session, offset: int, limit: int, **condition) -> List[dict]:
-    condition = {k: v for k, v in condition.items() if v}
-
-    return db.query(models.LeaseData).order_by(models.LeaseData.post_update).filter_by(**condition).offset(
+    query = db.query(models.LeaseData)
+    query = set_post_filters(query, **condition)
+    return query.order_by(models.LeaseData.post_update).offset(
         offset).limit(limit).all()
 
 
@@ -21,16 +40,8 @@ def get_post(db: Session, post_id: int):
 # 回傳指定條件下的統計資訊(資料筆數)
 def count_posts(db: Session, area=None, lower_rent=None, upper_rent=None, from_update=None, end_update=None) -> int:
     query = db.query(models.LeaseData)
-    if area:
-        query = query.filter(models.LeaseData.area == area)
-    if lower_rent:
-        query = query.filter(lower_rent <= models.LeaseData.rent)
-    if upper_rent:
-        query = query.filter(models.LeaseData.rent <= upper_rent)
-    if from_update:
-        query = query.filter(from_update <= models.LeaseData.post_update)
-    if end_update:
-        query = query.filter(models.LeaseData.post_update <= end_update)
+    query = set_post_filters(query, area=area, lower_rent=lower_rent, upper_rent=upper_rent, from_update=from_update,
+                             end_update=end_update)
     return query.count()
 
 

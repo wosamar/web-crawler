@@ -8,10 +8,9 @@ headers = {
 db = next(get_db())
 
 
-def set_driver(url: str, source: str):
+def set_driver(url: str):
     options = Options()
     options.add_argument('--headless')
     driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
     driver.get(url)
-    print(f"{source} loading...")
     return driver

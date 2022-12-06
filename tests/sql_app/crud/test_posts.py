@@ -4,6 +4,14 @@ from sql_app import models, schemas
 from sql_app.crud import posts as posts_crud
 
 
+def test_set_post_filters(db: Session, creat_data):
+    query = db.query(models.LeaseData)
+    query = posts_crud.set_post_filters(query=query, area="台北市")
+    result = query.order_by(models.LeaseData.post_update).first()
+
+    assert result
+
+
 def test_select_posts(db: Session, creat_data):
     offset = 0
     limit = 50

@@ -22,7 +22,6 @@ class LeaseData(Base):
     crawler_update = Column(DATETIME)  # 最後一次爬到的時間
 
 
-
 class LogData(Base):
     __tablename__ = "log_data"
     id = Column(Integer, primary_key=True, autoincrement=True)
