@@ -2,48 +2,51 @@
 <html lang="zh-Hant-TW">
 <head>
     <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <title>{{ item_data["title"] }}</title>
 </head>
 <body style="background-color:GhostWhite">
+<div class="container py-4">
+    <h2>{{request["detail"]}}</h2>
 
-<h2>{{request["detail"]}}</h2>
-
-{% if item_data != None%}
-<div>
-    <h2>{{ item_data["title"] }}</h2>
-    <p>地址：{{ item_data["address"] }}</p>
-    <p>坪數：{{ item_data["size"] }}坪</p>
-    <p>樓層：{{ item_data["floor"] }}</p>
-    <p>聯絡人類型：{{ item_data["contact"] }}</p>
-    <p>聯絡人：{{ item_data["poster"] }}</p>
-    <p style="color:Tomato">租金：{{ item_data["rent"] }}</p>
-    {% if item_data["leasable"] == 1%}
-    <p>租賃狀況：可租賃</p>
+    {% if item_data != None%}
+    <div class="card-body">
+        <h2>{{ item_data["title"] }}</h2>
+        <p>地址：{{ item_data["address"] }}</p>
+        <p>坪數：{{ item_data["size"] }}坪</p>
+        <p>樓層：{{ item_data["floor"] }}</p>
+        <p>聯絡人類型：{{ item_data["contact"] }}</p>
+        <p>聯絡人：{{ item_data["poster"] }}</p>
+        <p style="color:Tomato">租金：{{ item_data["rent"] }}</p>
+        {% if item_data["leasable"] == 1%}
+        <p>租賃狀況：可租賃</p>
+        {% else %}
+        <p>租賃狀況：不可租賃</p>
+        {% endif %}
+        <p>更新時間：{{ item_data["post_update"] }}</p>
+        <p>地區：{{item_data["area"]}}</p>
+        <p>來源：{{item_data["source"]}}</p>
+        {% if item_data["url"] != None%}
+        <a href="{{item_data.url}}">{{ item_data["url"]}}</a>
+        {% endif %}
+        <hr>
+    </div>
     {% else %}
-    <p>租賃狀況：不可租賃</p>
+    <div>
+        <h3>找不到此筆資料</h3>
+    </div>
     {% endif %}
-    <p>更新時間：{{ item_data["post_update"] }}</p>
-    <p>地區：{{item_data["area"]}}</p>
-    <p>來源：{{item_data["source"]}}</p>
-    {% if item_data["url"] != None%}
-    <a href="{{item_data.url}}">{{ item_data["url"]}}</a>
+    {% if item_data["source"] == "手動新增"%}
+    <div>
+        <a href="{{ url_for('update_post_form',post_id=post_id) }}">修改資料</a>
+        <a href="{{ url_for('delete_post',post_id=post_id) }}">刪除資料</a>
+        <hr>
+    </div>
     {% endif %}
-    <hr>
-</div>
-{% else %}
-<div>
-    <h3>找不到此筆資料</h3>
-</div>
-{% endif %}
-{% if item_data["source"] == "手動新增"%}
-<div>
-    <a href="{{ url_for('update_post_form',post_id=post_id) }}">修改資料</a>
-    <a href="{{ url_for('delete_post',post_id=post_id) }}">刪除資料</a>
-    <hr>
-</div>
-{% endif %}
-<div>
-    <a href="{{ url_for('read_posts_page') }}">回主頁</a>
+    <div>
+        <a href="{{ url_for('read_posts_page') }}">回主頁</a>
+    </div>
 </div>
 </body>
 </html>

@@ -130,8 +130,8 @@ async def read_post_detail(request: Request, post_id: int, db: Session = Depends
 
 
 # 刪除一筆租屋資料
-@router.post("/delete/{post_id}", response_class=HTMLResponse)
-async def delete_post(request: Request, post_id: int, db: Session = Depends(get_db)):
+@router.get("/delete/{post_id}", response_class=HTMLResponse)
+async def delete_post(post_id: int, db: Session = Depends(get_db)):
     post_data = posts_crud.get_post(db=db, post_id=post_id)
     if post_data:
         if post_data.source == "手動新增":

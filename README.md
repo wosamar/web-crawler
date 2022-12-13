@@ -27,20 +27,20 @@ poetry install
 ### (四)  初始化資料庫
 
 ```shell
-sql_app/main.py
+python sql_app/main.py
 ```
 
 ### (五) 啟動爬蟲排程
 排程設定爬蟲每小時運行一次
 ```shell
-cli.py
+python cli.py
 ```
 執行參數`-s`可指定開始執行時間(分鐘)  
 例：輸入30，則爬蟲會於10:30、11:30、12:30......開始運行
 
 ### (六) 啟動API
 ```shell
-api/main.py
+python api/main.py
 ``` 
 使用瀏覽器開啟OpenAPI文檔
 ```shell

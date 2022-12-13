@@ -28,10 +28,9 @@ class PostBase(BaseModel):  # 基本資料格式
 
 
 class PostInRequestBase(PostBase):
-
     class Config:
         schema_extra = {
-            "example" : {
+            "example": {
                 "title": "標題範例",
                 "size": 3,
                 "floor": "2/3",
@@ -40,71 +39,70 @@ class PostInRequestBase(PostBase):
                 "contact": "屋主",
                 "poster": "賈小姐",
                 "area": "台北市",
-                "post_update": "2022-12-06",
-                "url":"https://testtest.com.tw/",
-                "leasable":True,
-                "source":"範例",
-                "crawler_update":"2022-12-06 00:00:00",
+                "url": "https://testtest.com.tw/",
+                "leasable": True,
+                "source": "手動新增",
             }
         }
-    @validator('title')
-    def title_must_be_input(cls, v):
-        if v == 'string':
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="請輸入標題")
-        return v
 
     @validator('title')
     def title_len_too_long(cls, v):
-        if len(v) > 30:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="標題最多可輸入30個字元")
-        return v
+        if v:
+            if len(v) > 30:
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="標題最多可輸入30個字元")
+            return v
 
     @validator('size')
     def size_must_be_float(cls, v):
-
-        if not isinstance(v, int) and not isinstance(v, float):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="坪數必須為數字")
-        return v
+        if v:
+            if not isinstance(v, int) and not isinstance(v, float):
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="坪數必須為數字")
+            return v
 
     @validator('floor')
     def floor_len_too_long(cls, v):
-        if len(v) > 20:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="樓層最多可輸入20個字元")
-        return v
+        if v:
+            if len(v) > 20:
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="樓層最多可輸入20個字元")
+            return v
 
     @validator('address')
     def address_len_too_long(cls, v):
-        if len(v) >= 55:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="地址最多可輸入55個字元")
-        return v
+        if v:
+            if len(v) >= 55:
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="地址最多可輸入55個字元")
+            return v
 
     @validator('rent')
     def rent_must_be_int(cls, v):
-        if not isinstance(v, int):
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="租金格式不正確")
-        return v
+        if v:
+            if not isinstance(v, int):
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="租金格式不正確")
+            return v
 
     @validator('contact')
     def contact_len_too_long(cls, v):
-        if len(v) > 10:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="聯絡人最多可輸入10個字元")
-        return v
+        if v:
+            if len(v) > 10:
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="聯絡人最多可輸入10個字元")
+            return v
 
     @validator('area')
     def area_not_correct(cls, v):
-        if v == "台北市" or v == "新北市":
-            pass
-        else:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                                detail="地區格式不正確")
-        return v
+        if v:
+            if v == "台北市" or v == "新北市":
+                pass
+            else:
+                raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                                    detail="地區格式不正確")
+            return v
+
 
 
 class PostInDatabase(PostBase):
